@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0,user-scalable=no">
+    <meta property="og:image"  content="https://img.freepik.com/premium-vector/person-practices-breathing-exercises-sitting-crosslegged-serene-outdoor-setting-surrounded-by-green-leaves-refreshing-drinks_538213-120312.jpg" />
+    <link rel="icon" href="https://cdn-icons-png.freepik.com/512/2755/2755814.png?uid=R165141494&ga=GA1.2.222190507.1725024226" type="image/png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <title>Meditation Breathing Exercise</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Barlow:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+        body {
+            display: flex;
+            justify-content: end;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f8ff;
+            font-family: "Barlow", sans-serif;
+            font-weight: 900;
+            font-style: italic;
+            color: #333;
+            flex-direction: column;
+            background-image: url('bg1.jpg');
+            background-repeat: no-repeat;
+            background-size: cover;
+            background-position: center; 
+        }
+
+        h1 {
+            font-size: 2.5em;
+            text-align: center;
+            margin-bottom: 30px;
+            color: #F5F5DC ;
+            text-shadow: 0 0 10px #111;
+            -webkit-text-stroke: 1px #333;
+        }
+
+        .visit {
+            color: #111;
+            padding: .5em 2em ;
+            font-weight: 600;
+            font-style: normal;
+            border: 2px solid #222;
+        }
+
+        .box{
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .circle {
+            margin: 2rem 0;
+            width: 170px;
+            height: 170px;
+            border-radius: 50%;
+            background-color: #ffcccb;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            text-align: center;
+            align-items: center;
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #333;
+            transition: transform 6s ease-in-out, background-color 6s ease-in-out;
+        }
+
+        .message {
+            margin-top: 20px;
+            margin-bottom: 4rem;
+            font-size: 1.5em;
+            text-align: center;
+            color: #FF7F50;
+        }
+
+        #popup {
+            width: 100vw;
+            height: 100vh;
+            padding: .5em;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            border-radius: 0px;
+            backdrop-filter: blur(10px);
+            background: rgba(255, 255, 255, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color:  #FAF0E6 ;
+            font-size: 24px;
+            text-align: center;
+            z-index: 99;
+        }
+        .glass {
+            width: 100%;
+            padding: .5em;
+            border-radius: 0px;
+            backdrop-filter: blur(10px);
+            background: rgba(255, 255, 255, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color:  #FAF0E6 ;
+            font-size: 24px;
+            text-align: center;
+        }
+
+        .timer {
+            font-size: 2em;
+            margin-top: 10px;
+            color: #ff5722;
+        }
+
+    </style>
+</head>
+<body>
+
+    <audio hidden id="Bin" src="in.mp3"></audio>
+    <audio hidden id="Bout" src="out.mp3"></audio>
+    <div id="popup">
+        <h1> Wellcome <br> To Our Meditation <br> Breathing Practice Page</h1>
+        <a class="visit" onclick="visit()" >Visit</a>
+    </div>
+    <!--i class="fa-solid fa-circle-pause"></i>
+    <i class="fa-solid fa-circle-play"></i-->
+    <div class="box">
+        <div class="circle"> <span id="text">Breathe</span><span class="timer">0</span></div>
+        <div  class="message glass">Prepare to begin...</div>
+    </div>
+   
+
+    <script>
+        const messages = [
+            "শ্বাস নিন ৩ সেকেন্ডের জন্য...",
+            "শ্বাস ধরে রাখুন ৬ সেকেন্ডের জন্য...",
+            "শ্বাস ছাড়ুন ৯ সেকেন্ডের জন্য...",
+            "Relax and repeat..."
+        ];
+
+        const timings = [3, 6, 9];  // Inhale (3s), Hold (6s), Exhale (9s)
+        let messageElement = document.querySelector('.message');
+        let timerElement = document.querySelector('.timer');
+        let circleElement = document.querySelector('.circle');
+        let index = 0;
+        let timeLeft = 0;
+
+        function updateMessage() {
+            messageElement.textContent = messages[index];
+
+            if (index === 0) {
+                timeLeft = timings[0];
+                circleElement.style.transform = 'scale(1.4)';  // Inhale (grow)
+                circleElement.style.backgroundColor = '#ffe0b2';
+                document.getElementById('text').innerHTML = "Breathe <br> \"in\"";
+                document.getElementById('Bin').play();
+            } else if (index === 1) {
+                timeLeft = timings[1];
+                circleElement.style.transform = 'scale(1.4)';  // Hold (same size)
+                circleElement.style.backgroundColor = '#fff59d';
+                document.getElementById('text').innerHTML = "Breathe <br> \"Hold\"";
+            } else if (index === 2) {
+                timeLeft = timings[2];
+                circleElement.style.transform = 'scale(1)';  // Exhale (shrink)
+                circleElement.style.backgroundColor = '#b2dfdb';
+                document.getElementById('text').innerHTML = "Breathe <br> \"out\"";
+                document.getElementById('Bout').play();
+            }
+            
+            index = (index + 1) % 3;  // Rotate between inhale, hold, and exhale
+        }
+
+        function updateTimer() {
+            timerElement.textContent = timeLeft;
+            timeLeft--;
+
+            if (timeLeft < 0) {
+                updateMessage();  // Update the message when the timer hits 0
+            }
+        }
+
+        function startBreathing() {
+            updateMessage();  // First message
+            setInterval(updateTimer, 1000);  // Update timer every second
+        }
+
+        function visit(){
+            document.getElementById('popup').style.display="none";
+            setTimeout(() => {
+                startBreathing();  // Start the meditation exercise
+            }, 1500);
+        }
+    </script>
+
+</body>
+</html>
